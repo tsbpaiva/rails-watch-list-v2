@@ -1,0 +1,43 @@
+<%# recebe @list e @ bookmark de lists#show %>
+
+<div class="container">
+  <div class="position-relative">
+    <div class="card-category card-large" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3))">
+      <h1><%= @list.name %></h1>
+    </div>
+      <span class="movie-tag"><%= pluralize(@list.movies.size, 'movie') %></span>
+  </div>
+
+  <div class="row my-2">
+    <% @list.movies.each do |movie| %>
+      <% bookmark = Bookmark.find_by(list: @list, movie: movie) %>
+      <div class="col-12 col-sm-6 mb-4">
+        <div class="bg-white rounded shadow h-100">
+          <%= image_tag movie.poster_url, alt: movie.title, class: "movie-img rounded-top" %>
+          <div class="p-3 rounded-bottom d-flex flex-column">
+            <strong><%= movie.title %> <span class="text-muted font-weight-normal">• <%= movie.rating %> <i class="fas fa-star star-yellow"></i></span></strong>
+            <small class="text-muted"><%= movie.overview %></small>
+            <div class="d-flex align-items-end justify-content-between pt-4">
+              <div>
+                <i class="fas fa-quote-left me-2"></i><small class="flex-grow-1"><%= bookmark.comment %></small>
+              </div>
+              <small class="text-right flex-shrink-0"><%= link_to "delete", list_bookmark_path(bookmark), data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to remove #{movie.title} from your #{@list.name} list"}, class: 'text-danger' %></small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% end %>
+  </div>
+
+
+  <span class="mb-2 d-block"><small><em class="text-muted"><%= "You haven't saved any movies yet!" if @list.movies.empty? %></em></small></span>
+
+  <%# adding bookmark form %>
+  <%= simple_form_for [@list, @bookmark] do |f| %>
+    <%= f.association :movie, collection: Movie.all.order(:title), prompt: 'Select a movie' %>
+    <%= f.input :comment, placeholder: 'Write a comment about this movie' %>
+    <%= f.submit 'Add movie to list', class: 'btn btn-flat' %>
+    <%# if @bookmark is empty, will redirect to bookmark#create %>
+    <%# all the info will be in params[:bookmark] %>
+  <% end %>
+</div>

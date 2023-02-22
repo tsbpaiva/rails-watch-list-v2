@@ -40,6 +40,8 @@ bundle install
 rails generate simple_form:install --bootstrap
 ```
 
+Replace **all the content** of your `config/initializers/simple_form_bootstrap.rb` file with [this](https://github.com/heartcombo/simple_form-bootstrap/blob/main/config/initializers/simple_form_bootstrap.rb).
+
 Then replace Rails' stylesheets by Le Wagon's stylesheets:
 
 ```bash
@@ -75,7 +77,6 @@ Look at your main `application.scss` file to see how SCSS files are imported. Th
 
 // External libraries
 @import "bootstrap/scss/bootstrap"; // from the node_modules
-@import "font-awesome-sprockets";
 @import "font-awesome";
 
 // Your CSS partials
